@@ -54,7 +54,7 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
   /* Estado vacío */
   if (testimonios.length === 0) {
     return (
-      <div className="p-12 text-center bg-card border border-border rounded-xl my-4 font-body">
+      <div className="p-8 sm:p-12 text-center bg-card border border-border rounded-xl my-4 font-body w-full max-w-full">
         <FileText className="w-10 h-10 text-muted mx-auto mb-3" />
         <h3 className="text-sm font-semibold text-foreground">No se encontraron registros</h3>
         <p className="text-xs text-muted mt-1">
@@ -63,17 +63,17 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
       </div>
     );
   }
-
+  
   const esPendiente = estadoActual.toUpperCase().includes('PENDIENTE');
-
+  
   return (
-    <div className="font-body space-y-4">
+    <div className="font-body space-y-4 w-full max-w-full min-w-0">
       {/* VISTA MOBILE: Cards (se muestra solo en pantallas < md) */}
-      <div className="grid grid-cols-1 gap-3 md:hidden">
+      <div className="grid grid-cols-1 gap-3 md:hidden w-full max-w-full min-w-0">
         {testimonios.map((item) => (
           <div 
             key={item.id} 
-            className="bg-card border border-border rounded-xl p-4 shadow-sm space-y-3"
+            className="bg-card border border-border rounded-xl p-3.5 shadow-sm space-y-3 w-full max-w-full min-w-0 box-border"
           >
             {/* Header Card */}
             <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
@@ -94,36 +94,40 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
                 </span>
               </div>
             </div>
-
-            {/* Detalles */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span className="text-muted block text-[11px]">Acto / Operación:</span>
-                <span className="font-medium text-foreground/90">{item.tipo_acto}</span>
+  
+            {/* Detalles en apilamiento vertical fluido */}
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-muted text-[11px]">Acto / Operación:</span>
+                <span className="font-medium text-foreground/90 text-right truncate">
+                  {item.tipo_acto}
+                </span>
               </div>
-              <div>
-                <span className="text-muted block text-[11px]">Fecha Ingreso:</span>
-                <span className="font-medium text-foreground/90">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-muted text-[11px]">Fecha Ingreso:</span>
+                <span className="font-medium text-foreground/90 text-right">
                   {item.fecha_ingreso_registro || item.fecha_firma}
                 </span>
               </div>
             </div>
-
-            <div>
+  
+            <div className="pt-1">
               <span className="text-muted block text-[11px]">Partes Intervinientes:</span>
-              <span className="font-medium text-foreground">{item.partes}</span>
+              <span className="font-medium text-foreground block text-xs break-words leading-snug mt-0.5">
+                {item.partes}
+              </span>
             </div>
-
+  
             {/* Motivo Observación (solo si es pendiente) */}
             {esPendiente && (
-              <div className="flex items-start gap-1.5 text-amber-900 bg-amber-500/10 p-2 rounded-md border border-amber-500/20">
+              <div className="flex items-start gap-1.5 text-amber-900 bg-amber-500/10 p-2 rounded-md border border-amber-500/20 w-full min-w-0">
                 <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <span className="text-[11px] leading-snug font-medium">
+                <span className="text-[11px] leading-snug font-medium break-words min-w-0 flex-1">
                   {item.motivo_observacion || 'Sin motivo especificado'}
                 </span>
               </div>
             )}
-
+  
             {/* Acciones Mobile */}
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/60">
               {item.estado === 'EN_STOCK' && (
@@ -135,7 +139,7 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
                   <span>Entregar</span>
                 </button>
               )}
-
+  
               <button
                 onClick={() => handleEliminar(item.id)}
                 className="inline-flex items-center justify-center p-1.5 text-red-600 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -147,11 +151,11 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
           </div>
         ))}
       </div>
-
+  
       {/* VISTA DESKTOP: Tabla Tradicional (se oculta en pantallas < md) */}
-      <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-foreground">
+      <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm w-full max-w-full min-w-0">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-left text-xs text-foreground min-w-[640px]">
             <thead className="bg-muted/30 text-[11px] font-semibold text-muted uppercase tracking-wider border-b border-border">
               <tr>
                 <th className="px-6 py-3.5">Matrícula</th>
@@ -165,30 +169,30 @@ export default function TestimoniosTable({ testimonios, estadoActual }: Testimon
                 <th className="px-6 py-3.5 text-right">Acciones</th>
               </tr>
             </thead>
-
+  
             <tbody className="divide-y divide-border/60">
               {testimonios.map((item) => (
                 <tr 
                   key={item.id} 
                   className="hover:bg-primary-light/30 transition-colors"
                 >
-                  <td className="px-6 py-4 font-mono font-medium text-foreground">
+                  <td className="px-6 py-4 font-mono font-medium text-foreground whitespace-nowrap">
                     {item.matricula_inmueble || '-'}
                   </td>
-                  <td className="px-6 py-4 font-semibold text-foreground">
+                  <td className="px-6 py-4 font-semibold text-foreground whitespace-nowrap">
                     {item.numero_escritura}
                   </td>
                   <td className="px-6 py-4 text-foreground/80">
                     {item.tipo_acto}
                   </td>
-                  <td className="px-6 py-4 font-medium text-foreground">
+                  <td className="px-6 py-4 font-medium text-foreground max-w-xs truncate">
                     {item.partes}
                   </td>
                   {esPendiente && (
                     <td className="px-6 py-4">
                       <div className="flex items-start gap-1.5 text-amber-900 bg-amber-500/10 px-2.5 py-1.5 rounded-md border border-amber-500/20 max-w-md">
                         <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                        <span className="text-[11px] leading-snug font-medium">
+                        <span className="text-[11px] leading-snug font-medium break-words">
                           {item.motivo_observacion || 'Sin motivo especificado'}
                         </span>
                       </div>
